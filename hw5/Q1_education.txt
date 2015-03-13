@@ -1,0 +1,3 @@
+Q1_education
+
+M2 may be useful because I noticed that many grade="A" are gets "M2 = A".

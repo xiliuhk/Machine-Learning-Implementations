@@ -1,0 +1,6 @@
+Q0
+
+I think Decision Tree is appropriate for the music task, but not useful for the education task. 
+
+Whether a song is a hit depends on some features of the song, but wheter a student will get an A may not relate to other grades. 
+

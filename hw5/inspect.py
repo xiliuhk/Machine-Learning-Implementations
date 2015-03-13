@@ -78,10 +78,11 @@ def computeEntropy(instances, feature):
 
     valueCnt = countLabels(instances, feature)
 
-    if len(valueCnt) < 1:
+    if len(valueCnt) <= 1:
         return 0
 
     N = len(instances)
+    V = len(valueCnt)
 
     entropy = 0.0
 
@@ -93,20 +94,18 @@ def computeEntropy(instances, feature):
 
 
 def computeInfoGain(instances, feature, target):
-    curEntropy = computeEntropy(instances, target)
-
+    curEntropy = computeEntropy(instances, feature)
     children = defaultdict(list)
 
     for instance in instances:
         children[instance[feature]].append(instance)
 
     nextEntropy = 0.0
-
     N = len(instances)
 
     for childLabel in children.keys():
         p = len(children[childLabel]) / float(N)
-        nextEntropy += p * computeEntropy(children[childLabel], target)
+        nextEntropy += p * computeEntropy(children[childLabel], feature)
 
     infoGain = curEntropy - nextEntropy
 
@@ -129,7 +128,6 @@ def selectSplitFeature(instances, candidateFeatures, target):
 def splitDataset(instances, splitFeature):
     children = defaultdict(list)
     for instance in instances:
-        #print instance[splitFeature]
         children[instance[splitFeature]].append(instance)
     return children
 
@@ -215,7 +213,6 @@ def classify(root, instances, features, target):
     features.remove(root.splitFeature)
     for child in root.children:
         child.instances = childrenMap[child.label]
-        #if len(child.children) > 0:
         child = classify(child, child.instances, features, target)
     return root
 
@@ -238,11 +235,10 @@ def countMis(root):
 #main func
 def main():
     TRAIN = sys.argv[1]
-    TEST = sys.argv[2]
 
     trainFeatures, trainSet = createInstance(TRAIN)
-    testFeatures, testSet = createInstance(TEST)
-
+    
+    #empty trainSet
     if len(trainSet) < 1 or trainSet == None:
         print "empty!"
         return None
@@ -250,26 +246,21 @@ def main():
     target = trainFeatures[len(trainFeatures) - 1]
 
     trainFeatures.remove(target)
-    testFeatures.remove(target)
+    
+    entropy = computeEntropy(trainSet, target)
+    sys.stdout.write("entropy: "+ "{:.2f}".format(entropy)+"\n")
+    
+    mis = 0
+    cntMap = countLabels(trainSet, target)
+    for label in cntMap.keys():
+        if label in NEG:
+            mis = cntMap[label]
 
-    root = Node()
-    root = buildDTree(root, trainSet, trainFeatures, target, 1)
-    outputDTree(root)
-
-    trainError = float(countMis(root))/len(trainSet)
+    trainError = float(mis)/len(trainSet)
     sys.stdout.write("error(train): "+ "{:.2f}".format(trainError)+"\n")
-
-    testDT = classify(root, testSet, testFeatures, target)
-    #outputDTree(testDT)
-    testError = float(countMis(testDT))/len(testSet)
-    sys.stdout.write("error(test): "+ "{:.2f}".format(testError)+"\n")
-
+    
     return
 
-#print "error(train): " + str(trainErr)
-
-#testErr = classify(decisionTree, testSet, testFeatures, target)
-#print "error(train): " + str(testErr)
 
 main()
 
