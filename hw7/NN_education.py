@@ -5,10 +5,6 @@ import math
 import time
 
 def sigmoid(x):
-    if x > 200:
-        x = 200
-    if x < -200:
-        x = -200
     return 1.0/(1+math.exp(-x))
 
 def sigmoid_deriv(x):
@@ -35,12 +31,12 @@ class ANN_1HL:
         self.inWeights = makeMatrix(inputSize+1, hiddenLayerSize, 1.0)
         for i in xrange(0, hiddenLayerSize):
             for j in xrange(1, inputSize+1):
-                self.inWeights[i][j] = random.uniform(-0.2, 0.2)
+                self.inWeights[i][j] = random.uniform(-0.01, 0.01)
 
 
         self.outWeights = []
         for i in xrange(0, hiddenLayerSize):
-            self.outWeights.append(random.uniform(-0.2, 0.2))
+            self.outWeights.append(random.uniform(-0.01, 0.01))
 
         self.inWeightsPrev = makeMatrix(inputSize+1, hiddenLayerSize)
 
@@ -67,26 +63,21 @@ class ANN_1HL:
     def backPropagationAlgo(self, key, learnRate, momentum, scale):
 
         #error for output
-        deltaOutput = sigmoid_deriv(self.output)*(key/scale - self.output)
+        deltaOutput = sigmoid_deriv(self.output)*(key/scale - (self.output-0.5)*10)
 
         #error for hiddens
         deltaHiddens = [0.0]*self.hiddenLayerSize
         for i in xrange(0, self.hiddenLayerSize):
-            error = deltaOutput*self.outWeights[i]
-            deltaHiddens[i] = deltaOutput*self.outWeights[i]*sigmoid_deriv(self.hiddenValues[i])
+            deltaHiddens[i] = sigmoid_deriv(self.hiddenValues[i])*(deltaOutput*self.outWeights[i])
 
         #update output weights
         for i in xrange(0, self.hiddenLayerSize):
-            change = deltaOutput*self.hiddenValues[i]
-            self.outWeights[i] += learnRate*change + momentum*self.outWeightsPrev[i]
-            self.outWeightsPrev[i] = change
+            self.outWeights[i] += learnRate*deltaOutput*self.hiddenValues[i]
 
         #update input weights
         for i in xrange(0, self.hiddenLayerSize):
             for j in xrange(0, self.inputSize+1):
-                change = deltaHiddens[i] * self.inputs[j]
-                self.inWeights[i][j] += learnRate*change + momentum*self.inWeightsPrev[i][j]
-                self.inWeightsPrev[i][j] = change
+                self.inWeights[i][j] += learnRate*deltaHiddens[i]*self.inputs[j]
 
         #calculate total error
         error = 0.5*(key - self.output)**2
@@ -117,16 +108,15 @@ class ANN_1HL:
         n = len(testInsts)
         for i in xrange(0, n):
             output = self.feedForward(testInsts[i], 100)
-            print round(output*100, 2)
+            #print round((output-0.5)*1000, 2)
+            print str(round((output-0.5)*1000, 2))+ "["+str(testKeys[i])+"]"
         return 0
+
 def normalizeCol(instances, col):
-
-    avg = mean(zip(*instances)[col])
-    s = std(zip(*instances)[col])
-
+    min_val = min(zip(*instances)[col])
+    max_val = max(zip(*instances)[col])
     for i in xrange(0, len(instances)):
-        instances[i][col] = (instances[i][col] - avg)/s
-
+        instances[i][col] = (instances[i][col] - min_val)/(max_val - min_val)
     return instances
 
 def createInstance(dataFile, purpose):
@@ -191,9 +181,9 @@ def _main():
 
     testKey = createTestKey("education_dev_keys.txt")
 
-    ann = ANN_1HL(20, len(testFeature))
+    ann = ANN_1HL(10, len(testFeature))
 
-    trainError = ann.train(trainInsts, trainKey, 50, start, 0.15, 0.02)
+    trainError = ann.train(trainInsts, trainKey, 500, start, 0.9, 0)
     #print trainError
 
     testError = ann.vaidate(testInsts, testKey)
