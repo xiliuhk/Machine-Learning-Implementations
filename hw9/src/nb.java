@@ -9,8 +9,8 @@ import java.io.*;
 public class nb {
     public HashMap<String, HashMap<String, Double>> prob_map;
     public HashMap<String, Double> p_v;
-    //public String dir = "data/";
-    public String dir = "";
+    public String dir = "data/";
+    //public String dir = "";
     public HashMap<String, Integer> vocab;
 
     public nb(){

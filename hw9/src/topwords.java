@@ -10,8 +10,8 @@ public class topwords {
     public HashMap<String, HashMap<String, Double>> word_score;
     public List<String> labels;
 
-    //public String dir = "data/";
-    public String dir = "";
+    public String dir = "data/";
+    //public String dir = "";
 
     public topwords(){
         this.word_score = new  HashMap<String, HashMap<String, Double>>();
