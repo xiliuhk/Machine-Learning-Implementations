@@ -1,0 +1,3 @@
+The two lists looks very similar, only differ on few words.
+There are many overlapping words.
+Most of overlapping words are stopwords or very frequent but less meaningful words, such as "the", "of", "as", "and", and "is".

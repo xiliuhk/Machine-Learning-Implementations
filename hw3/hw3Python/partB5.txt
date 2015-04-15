@@ -1,1 +1,0 @@
-The model did not do very well, because it lists all the concepts, and remove those inconsistant with instances in the training set. For incoming instances it has never been trained on, it could not make a decision. This is kind of overfitting, which is not good for machine learning predictions, because we are trying to predict unknowns based on the previous experiences.  

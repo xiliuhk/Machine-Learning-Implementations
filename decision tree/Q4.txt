@@ -1,0 +1,6 @@
+Q4.
+
+Which is more accurate on the training data? 
+Music
+Which is more accurate on the testing data?
+Music

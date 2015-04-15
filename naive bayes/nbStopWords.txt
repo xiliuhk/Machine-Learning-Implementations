@@ -1,0 +1,12 @@
+Experiment 1.
+N_of_StopWord   0       20      40      80      150     200
+Accuracy        0.8056  0.8056  0.8056  0.8056  0.8056  0.7778
+
+Experiment 2.
+N_of_StopWord   250     300     400     800     1000     2000
+Accuracy        0.8333  0.8333  0.8333  0.8333  0.8611  0.8333
+
+Optimal Setting N_of_stopWord = 1000
+
+Conclusion: increasing N_of_stopWord withing a range could improve accuracy. When N_of_stopWord is small, the effect of removing stop-word is not significant because there are still many stopwords. When N_of_stopWord is too large, that is, removing stopwords is overhead, many frequent words, which are not stopwords are removed, thus the accuracy is harmed. The best setting so far is N_of_stopWord = 1000.
+

@@ -1,0 +1,5 @@
+Most of them are very infrequent words or generic term, such as slublog, kyer, leftism, rittenhouse, and liberaloasis.
+
+There are no overlapping between the two lists, because if log(p(w|c)/p(w|l) is very large, log(p(w|l)/p(w|c)) must be very small.
+
+Words found by log-odds are very different from those found by topwords.java, most of which are frequent words in our daily conversations and writings. Most of Words found by log-odds are very infrequent words, abbreviations, or generic terms.

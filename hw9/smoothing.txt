@@ -1,6 +1,0 @@
-q           0       0.1     0.5     1       5
-Accuracy    0.7778  0.8333  0.8056  0.8056  0.6944
-
-Optimal setting: q = 0.1
-
-Observations: smoothing could improve the accuracy. But the value for smoothing has an upper bound, when it is too large, p(w|v) for each word tend to be close to each other, that is, the effect of term frequency is lower thus based on this, predictions are less accurate.
