@@ -138,21 +138,29 @@ class HMM:
 
                     for state in self.emit.keys():
                         max = float("-inf")
+                        a_tmp[state] = self.emit[state][word]
                         for prev_state in self.vp[t].keys():
-                            tmp = self.vp[t][prev_state] + self.trans[prev_state][state] + self.emit[state][word]
+                            tmp = self.vp[t][prev_state] + self.trans[prev_state][state]
                             if max < tmp:
                                 max = tmp
                                 q_star[state] = self.q[t][prev_state] + "." + state
-                        a_tmp[state] = tmp
+                        a_tmp[state] += max
 
                     self.vp.append(a_tmp)
                     self.q.append(q_star)
                     t += 1
 
-                max_seq = self.q[t][state].split(".")
+
+                max_seq = []
+                max_prob = float("-inf")
+
+                for state in self.vp[t].keys():
+                    if max_prob < self.vp[t][state]:
+                        max_prob = self.vp[t][state]
+                        max_seq = self.q[t][state].split(".")
 
                 tags = []
-                for i in xrange(0, len(words)-1):
+                for i in xrange(0, len(words)):
                     tags.append(words[i] + "_" + max_seq[i])
                 ret.append(tags)
         return ret
@@ -200,6 +208,7 @@ def _main():
     for sentence in ret:
         for tag in sentence:
             out += tag + " "
+        out = out[:-1]
         out += "\n"
     print out[:-1]
 _main()
